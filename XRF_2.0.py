@@ -19,31 +19,32 @@ colors = ['black','grey','lightgrey']
 
 ##################################################################################################
 ###################################      PARAMETRI MISURA     ####################################
-filenm_prefix = 'tef_what_20230927_STD0'
-nfiles = 20
-time_str_filter = '1800s' # time string reported in the filename of measured filters 
-voltage_str_legend = '39kV' # stringa usata per legenda
-voltage_str_infile = '' # stringa usata nei nomi file delle misure di standard e teflon
-min_std = 5 # minuti di misura standard
-min_sample = 30 # minuti di misura campioni
-I=0.1 # corrente in mA
-T=min_std*60 # tempo di misura degli standard in secondi
-err_perc_standard=0.05 # errore percentuale sugli standard
-mylar_prefix = 'std_standard_blk_'
-filtri = ['T3','T5']
-
-# misura luglio
-# filenm_prefix = 'teflon_what_STD0'
-# nfiles = 27
-# time_str_filter = '' # time string reported in the filename of measured filters 
+# filenm_prefix = 'tef_what_20230927_STD0'
+# nfiles = 20
+# time_str_filter = '1800s' # time string reported in the filename of measured filters 
 # voltage_str_legend = '39kV' # stringa usata per legenda
-# voltage_str_infile = '' # stringa usata nei nomi file delle misure di standard e teflon# min_std = 2 # minuti di misura standard
-# min_sample = 5 # minuti di misura campioni
+# voltage_str_infile = '' # stringa usata nei nomi file delle misure di standard e teflon
+# min_std = 5 # minuti di misura standard
+# min_sample = 30 # minuti di misura campioni
 # I=0.1 # corrente in mA
 # T=min_std*60 # tempo di misura degli standard in secondi
 # err_perc_standard=0.05 # errore percentuale sugli standard
-# mylar_prefix = 'std_blk_'
-# filtri = ['T3','T5','T9']
+# mylar_prefix = 'std_standard_blk_'
+# filtri = ['T3','T5']
+
+# misura luglio
+filenm_prefix = 'teflon_what_STD0'
+nfiles = 27
+time_str_filter = '' # time string reported in the filename of measured filters 
+voltage_str_legend = '39kV' # stringa usata per legenda
+voltage_str_infile = '39kV' # stringa usata nei nomi file delle misure di standard e teflon
+min_sample = 5 # minuti di misura campioni
+min_std = 2 # minuti di misura standard
+I=0.1 # corrente in mA
+T=min_std*60 # tempo di misura degli standard in secondi
+err_perc_standard=0.05 # errore percentuale sugli standard
+mylar_prefix = 'std_blk_'
+filtri = ['T3','T5','T9']
 ###################################################################################################
 #####################################  TEFLON-WHATMAN   ###########################################
 # cerca files generati da batch gupix e rinominali con il nome del file dello spettro
@@ -99,9 +100,9 @@ standard_39kv = [f for f in files_list if ('std_' in f[1])
 mylar_39kv    = [f for f in files_list if (mylar_prefix in f[1]) ]
 teflon_blk_39kv = [f for f in files_list if ('std_teflon_blk_' in f[1]) ]
 
-std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg', 'Cu', 'Fe', 'Pb', 'Zn', 'Mn', 'Ti', 'S' , 'Cl' ],
-                                   'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 16.7, 24.0, 43.4, 15.4, 24.2, 26.2, 11.3, 18.6 ],
-                                   'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K',  'K',  'LA',  'K',  'K',  'K',  'K', 'K'  ]}) # valori di concentrazione elementale sui filtri misurati
+std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg', 'Cu', 'Fe', 'Pb', 'Zn', 'Mn', 'Ti', 'S'   ],
+                                   'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 16.7, 24.0, 43.4, 15.4, 24.2, 26.2, 11.3  ],
+                                   'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K',  'K',  'LA',  'K',  'K',  'K',  'K' ]}) # valori di concentrazione elementale sui filtri misurati
 
 
 
@@ -175,8 +176,11 @@ for i, fil in zip(range(len(filtri)),filtri):
                                                               min_sample = min_sample, 
                                                               y_units ='[$\mu$g/cm$^2$]', 
                                                               color = 'gray')
-    t2_39kv=    t2_39kv.round({ '2-FWHM_Area_tef_blk':0,'2-FWHM_Area':0, 'conc[ug/cm^2]':2, 'MDL[ug/cm^2]':2, 'standard_conc':1,'2fwhm_area':0,'mylar_2fwhm_area':0})
-    t2_39kv.to_csv('./results/' + filenm_prefix.replace('_STD0','') + '_'+fil+'.csv', sep=' ', columns=['Z','element', 'line', 'conc[ug/cm^2]', 'MDL[ug/cm^2]','2-FWHM_Area', '%Fit_Err', '2-FWHM_Area_tef_blk','standard_conc','2fwhm_area_std','mylar_2fwhm_area'])
+    t2_39kv=    t2_39kv.round({ '2-FWHM_Area_tef_blk':0,'2-FWHM_Area':0, 'conc[ug/cm^2]':2,'conc_err_log[ug/cm^2]':2,\
+                               'MDL[ug/cm^2]':2, 'standard_conc':1,'2fwhm_area':0,'mylar_2fwhm_area':0})
+    t2_39kv.to_csv('./results/' + filenm_prefix.replace('_STD0','') + '_'+fil+'.csv', sep=' ', columns=['Z','element', 'line', \
+                                        'conc[ug/cm^2]', 'conc_err_log[ug/cm^2]', 'MDL[ug/cm^2]','2-FWHM_Area', '%Fit_Err', '2-FWHM_Area_tef_blk',\
+                                        'standard_conc','2fwhm_area_std','2fwhm_area_%fit_err_std','mylar_2fwhm_area'])
     ##### store MDL values for each filter
 
     ## 39kV
@@ -204,12 +208,11 @@ for i, fil in zip(range(len(filtri)),filtri):
     pixe_df.insert(1,'detector',pixe_df.index)
     pixe_df['detector'] = pixe_df['detector'].apply(lambda x: x.split('_')[1])
     pixe_df = pixe_df[['element','detector', fil, fil+'_err']]
-    # calcola errore
+    ###### calcola errore PIXE ########
     pixe_df.insert(len(pixe_df.columns), fil+'_err_abs', 
                    ((pixe_df[fil+'_err']*0.01*pixe_df[fil])**2 + (err_perc_standard*pixe_df[fil])**2 )**0.5 )
     
     t2_elements =  t2_39kv[t2_39kv['conc[ug/cm^2]'].notna() ]['element']
-    
     for ele in pixe_df['element']: # remove elements measured by PIXE but not by XRF
         present=False
         for e in t2_elements:
@@ -254,6 +257,9 @@ for i, fil in zip(range(len(filtri)),filtri):
     print('\n\n',fil, " teflon blank contribution to 2fwhm area [%]:\n",round((t2_39kv.set_index('element')['2-FWHM_Area_tef_blk']/ t2_39kv.set_index('element')['2-FWHM_Area'])*100,2))
 
 mdl_frame_39kv.to_csv(filenm_prefix.replace('_STD0','') + '_mdl_teflon_what_39kv', sep=' ', index=False)
+
+# t2_39kv=t2_39kv.set_index('element')
+# print('\n concentrazioni:\n',t2_39kv['conc[ug/cm^2]'].astype(str)+' +- ' + t2_39kv['conc_err_log[ug/cm^2]'].round(2).astype(str))
 
 
 # stampa comandi bash per rinominare spettri gupix che sono numerati 1-28

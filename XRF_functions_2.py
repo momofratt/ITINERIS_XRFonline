@@ -20,8 +20,8 @@ def plot_concentrations(filters, teflon_blk, standard, mylar, std_conc, std_err_
     std_2fwhm = get_std_2fwhm(standard, mylar, std_conc)
     T1        , T2        , T3         = get_gupix_tables('./results/'+filters[0][0])
     
-    T2 = pd.merge(T2, std_2fwhm[['element','line','standard_conc','2fwhm_area','mylar_2fwhm_area']], on=['element','line'])
-    T2 = T2.rename(columns={'2fwhm_area':'2fwhm_area_std'})
+    T2 = pd.merge(T2, std_2fwhm[['element','line','standard_conc','2fwhm_area', '2fwhm_area_%fit_err','mylar_2fwhm_area']], on=['element','line'])
+    T2 = T2.rename(columns={'2fwhm_area':'2fwhm_area_std', '2fwhm_area_%fit_err':'2fwhm_area_%fit_err_std'})
 
     
     if len(teflon_blk)>0:
@@ -45,17 +45,43 @@ def plot_concentrations(filters, teflon_blk, standard, mylar, std_conc, std_err_
         # T2.loc[T2['element']==element, 
         #             'MDL[ug/cm^2]']  =  T2['LOD_Area']*r
         
+    ################### Calcolo errore con derivate parziali (da rivedere!!!!) ################################
+    # D  = T2['2fwhm_area_std'] 
+    # M =  min_std / min_sample
+    # A1 =  T2['%Fit_Err']    *0.01           *T2['2-FWHM_Area'] * T2['standard_conc'] * M / D
+    # A2 =  T2['2fwhm_area_%fit_err_std']*0.01*T2['2fwhm_area_std']*T2['2-FWHM_Area'] * T2['standard_conc'] * M  / (D**2)
+    # A3 =  T2['2-FWHM_Area'] * std_err_perc*T2['conc[ug/cm^2]'] * T2['standard_conc'] * M / D
+    # T2.insert(len(T2.columns), 'A1', A1)
+    # T2.insert(len(T2.columns), 'A2', A2)
+    # T2.insert(len(T2.columns), 'A3', A3)
+    # conc_error = A1 + A2 + A3
+    # T2.insert(T2.columns.get_loc('conc[ug/cm^2]')+1, 'conc_err[ug/cm^2]' , conc_error)
+    ###########################################################################################################
+    
     r = T2['standard_conc'] / (T2['2fwhm_area_std'] - T2['mylar_2fwhm_area'] ) * min_std / min_sample
     T2['conc[ug/cm^2]'] =  (T2['2-FWHM_Area']-T2['2-FWHM_Area_tef_blk'])*r
     T2['MDL[ug/cm^2]']  =   T2['LOD_Area']*r
         
     T2 = T2[T2['conc[ug/cm^2]'].notna()]
-    T2 = T2[T2['conc[ug/cm^2]']>0]    
+    T2 = T2[T2['conc[ug/cm^2]']>=0]    
+    
+    ################## Calcolo errore con derivate log ##############################
+    err_log = (T2['%Fit_Err']                * 0.01 + \
+               T2['2fwhm_area_%fit_err_std'] * 0.01 + \
+               std_err_perc) * T2['conc[ug/cm^2]'] 
+    
+    T2.insert(T2.columns.get_loc('conc[ug/cm^2]')+1, 'conc_err_log[ug/cm^2]' , err_log)
+    
+    # ax.errorbar(T2['element'],
+    #             T2['conc[ug/cm^2]'], 
+    #             yerr=( (T2['conc[ug/cm^2]']*T2['%Fit_Err']*0.01)**2 + (T2['conc[ug/cm^2]']*std_err_perc)**2)**0.5, 
+    #             capsize=5, fmt = marker, label=label, color=color, zorder=3)
+   
     ax.errorbar(T2['element'],
                 T2['conc[ug/cm^2]'], 
-                yerr=( (T2['conc[ug/cm^2]']*T2['%Fit_Err']*0.01)**2 + (T2['conc[ug/cm^2]']*std_err_perc)**2)**0.5, 
+                yerr = T2['conc_err_log[ug/cm^2]'], 
                 capsize=5, fmt = marker, label=label, color=color, zorder=3)
-
+    
     ax.scatter(T2['element'],
                 T2['MDL[ug/cm^2]'], 
                 marker = '_', color=color, zorder=3)
@@ -78,6 +104,7 @@ def get_std_2fwhm(std_list, mylar, std_conc, area = '2-FWHM_Area'):
     std_2fwhm = pd.DataFrame(data={'element':[], 
                                    'line':[], 
                                    area_str:[],
+                                   area_str+'_%fit_err':[],
                                    'LOD':[],
                                    'mylar_'+area_str:[], 
                                    'mylar_lod':[], 
@@ -108,8 +135,9 @@ def get_std_2fwhm(std_list, mylar, std_conc, area = '2-FWHM_Area'):
 
         # inserisce riga nel dataframe std_2fwhm
         std_2fwhm.loc[len(std_2fwhm.index)] = [element, line,
-                            t2[condition][area].iat[0],
-                            t2[                  condition]['LOD_Area'].iat[0],
+                            t2[                      condition][area].iat[0],
+                            t2[                      condition]['%Fit_Err'].iat[0],
+                            t2[                      condition]['LOD_Area'].iat[0],
                             t2_myl[              condition_myl][area].iat[0],
                             t2_myl[              condition_myl]['LOD_Area'].iat[0],
                             std_conc[std_conc['ele' ]==element]['conc'].iat[0],
