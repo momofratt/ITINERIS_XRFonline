@@ -1,0 +1,10 @@
+__pycache__/
+data_*
+gupix_list
+gupix_par/
+mdl_xact/
+miscellanea/
+old_py/
+pymca/
+res_PIXE/
+results/
