@@ -48,7 +48,7 @@ def plot_concentrations(filters, teflon_blk, standard, mylar, std_conc, std_err_
     ################### Calcolo errore con derivate parziali (da rivedere!!!!) ################################
     # D  = T2['2fwhm_area_std'] 
     # M =  min_std / min_sample
-    # A1 =  T2['%Fit_Err']    *0.01           *T2['2-FWHM_Area'] * T2['standard_conc'] * M / D
+    # A1 =  T2['%Fit_Err']*0.01               *T2['2-FWHM_Area'] * T2['standard_conc'] * M / D
     # A2 =  T2['2fwhm_area_%fit_err_std']*0.01*T2['2fwhm_area_std']*T2['2-FWHM_Area'] * T2['standard_conc'] * M  / (D**2)
     # A3 =  T2['2-FWHM_Area'] * std_err_perc*T2['conc[ug/cm^2]'] * T2['standard_conc'] * M / D
     # T2.insert(len(T2.columns), 'A1', A1)
@@ -118,7 +118,7 @@ def get_std_2fwhm(std_list, mylar, std_conc, area = '2-FWHM_Area'):
         element = s_file[1].split('_')[1]
         if element.startswith('K') | (element=='P') | element.startswith('V'):
             element=element[0]
-        elif element.startswith('Mylar'):
+        elif element.startswith('Mylar'): # questa probabilmente no viene mai usata
             element=element
         elif element == 'CuSx':
             element='S'
