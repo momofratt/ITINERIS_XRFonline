@@ -19,31 +19,11 @@ colors = ['black','grey','lightgrey']
 
 ##################################################################################################
 ###################################      PARAMETRI MISURA     ####################################
-# STRAS Terni He
-# filenm_prefix      = 'terni_20231024_He_STD0'
-# pixe_filenm        = 'conc_STRAS_Terni.csv'
-# pixe_err_filenm    = 'conc_STRAS_Terni_errors.csv' # file contenente errori PIXE
-# filter_prefix      = 'stras'
-# res_folder         = './results/20231027/He/'
-# pixe_nan           = 'BL' # valore nan nel file di risultati pixe
-# nfiles             = 14
-# time_str_filter    = '1800s' # time string reported in the filename of measured filters 
-# voltage_str_legend = '38kV'  # stringa usata per legenda
-# voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
-# min_std            = 5       # minuti di misura standard
-# min_sample         = 30      # minuti di misura campioni
-# I                  = 0.1     # corrente in mA
-# T                  = min_std*60  # tempo di misura degli standard in secondi
-# err_perc_standard  = 0.05        # errore percentuale sugli standard
-# mylar_prefix       = 'standard_blk_'
-# filter_blk_prefix  = 'stras_blk_'
-# filtri             = ['stras22','stras45']
-
-# TEFLON WHAT He
+##### STRAS Terni He
 filenm_prefix      = 'terni_20231024_He_STD0'
-pixe_filenm        = 'conc_PIXE_teflon_watman.csv'
-pixe_err_filenm    = 'conc_PIXE_teflon_watman_errors.csv' # file contenente errori PIXE
-filter_prefix      = 'T'
+pixe_filenm        = 'conc_STRAS_Terni.csv'
+pixe_err_filenm    = 'conc_STRAS_Terni_errors.csv' # file contenente errori PIXE
+filter_prefix      = 'stras'
 res_folder         = './results/20231027/He/'
 pixe_nan           = 'BL' # valore nan nel file di risultati pixe
 nfiles             = 14
@@ -56,15 +36,35 @@ I                  = 0.1     # corrente in mA
 T                  = min_std*60  # tempo di misura degli standard in secondi
 err_perc_standard  = 0.05        # errore percentuale sugli standard
 mylar_prefix       = 'standard_blk_'
-filter_blk_prefix  = 'teflon_blk_'
-filtri             = ['T3','T5']
+filter_blk_prefix  = 'stras_blk_'
+filtri             = ['stras22','stras45']
+
+###### TEFLON WHAT He
+# filenm_prefix      = 'tef_what_20231024_He_STD0'
+# pixe_filenm        = 'conc_PIXE_teflon_watman.csv'
+# pixe_err_filenm    = 'conc_PIXE_teflon_watman_errors.csv' # file contenente errori PIXE
+# filter_prefix      = 'T'
+# res_folder         = './results/20231027/He/'
+# pixe_nan           = 'BL' # valore nan nel file di risultati pixe
+# nfiles             = 11
+# time_str_filter    = '1800s' # time string reported in the filename of measured filters 
+# voltage_str_legend = '38kV'  # stringa usata per legenda
+# voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
+# min_std            = 5       # minuti di misura standard
+# min_sample         = 30      # minuti di misura campioni
+# I                  = 0.1     # corrente in mA
+# T                  = min_std*60  # tempo di misura degli standard in secondi
+# err_perc_standard  = 0.05        # errore percentuale sugli standard
+# mylar_prefix       = 'standard_blk_'
+# filter_blk_prefix  = 'teflon_blk_'
+# filtri             = ['T3','T5']
 
 # STRAS Terni
 # filenm_prefix      = 'terni_20231025_STD0'
 # pixe_filenm        = 'conc_STRAS_Terni.csv'
 # pixe_err_filenm    = 'conc_STRAS_Terni_errors.csv' # file contenente errori PIXE
 # filter_prefix='stras'
-# res_folder = './results/20231027/'
+# res_folder = './results/20231027/noHe/'
 # pixe_nan ='BL' # valore nan nel file di risultati pixe
 # nfiles             = 25
 # time_str_filter    = '1800s' # time string reported in the filename of measured filters 
@@ -165,13 +165,13 @@ standard_39kv   = [f for f in files_list if ('std_' in f[1])
 mylar_39kv      = [f for f in files_list if (mylar_prefix in f[1]) ]
 teflon_blk_39kv = [f for f in files_list if (filter_blk_prefix in f[1]) ]
 
-# std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg', 'Cu', 'Fe', 'Pb', 'Zn', 'Mn', 'Ti',  'S', 'Cr', 'Ni', 'Mo'   ],
-#                                    'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 16.7, 24.0, 43.4, 15.4, 24.2, 26.2, 11.3,   18.9  , 13.6   , 32.0   ],
-#                                    'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K',  'K',  'LA',  'K',  'K',  'K',  'K', 'K', 'K' , 'K' ]}) # valori di concentrazione elementale sui filtri misurati
+std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg', 'Cu', 'Fe', 'Pb', 'Zn', 'Mn', 'Ti',  'S', 'Cr', 'Ni', 'Mo'   ],
+                                    'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 16.7, 24.0, 43.4, 15.4, 24.2, 26.2, 11.3,   18.9  , 13.6   , 32.0   ],
+                                    'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K',  'K',  'LA',  'K',  'K',  'K',  'K', 'K', 'K' , 'K' ]}) # valori di concentrazione elementale sui filtri misurati
 
-std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg',   'S' ],
-                                   'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 11.3   ],
-                                   'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K' ]}) # valori di concentrazione elementale sui filtri misurati
+# std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg',   'S' ],
+#                                    'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 11.3   ],
+#                                    'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K' ]}) # valori di concentrazione elementale sui filtri misurati
 
 
 ##########################################
@@ -200,7 +200,7 @@ fig, ax = plt.subplots(1,1, figsize =(6,4))
 ax.scatter(peak_area_all['element'], peak_area_all['sensitivity'], c='black', marker='*',label = voltage_str_legend,zorder=2)
 ax.grid(which='both')
 ax.legend()
-ax.set_ylabel('sensitivity [cts/mA/($\mu$g/cm$^2$)]')
+ax.set_ylabel('sensitivity [cts mA$^{-1}$ ($\mu$g/cm$^2$)$^{-1}$]')
 ax.set_yscale('log')
 # ax.set_ylim([1,1000])
 plt.savefig(res_folder+ filenm_prefix.replace('_STD0','') + '_sensitivity_Rh_anode.png', format='png', dpi=300)
@@ -247,9 +247,7 @@ for i, fil in zip(range(len(filtri)),filtri):
     
     t2_39kv=    t2_39kv.round({ '2-FWHM_Area_tef_blk':0,'2-FWHM_Area':0, 'conc[ug/cm^2]':2,'conc_err_log[ug/cm^2]':2,\
                                'MDL[ug/cm^2]':2, 'standard_conc':1,'2fwhm_area':0,'mylar_2fwhm_area':0})
-    t2_39kv.to_csv(res_folder + filenm_prefix.replace('_STD0','') + '_'+fil+'.csv', sep=' ', columns=['Z','element', 'line', \
-                                        'conc[ug/cm^2]', 'conc_err_log[ug/cm^2]', 'MDL[ug/cm^2]','2-FWHM_Area', '%Fit_Err', '2-FWHM_Area_tef_blk',\
-                                        'standard_conc','2fwhm_area_std','2fwhm_area_%fit_err_std','mylar_2fwhm_area'], index=False)
+    
     ##### store MDL values for each filter
 
     ## 39kV
@@ -307,6 +305,16 @@ for i, fil in zip(range(len(filtri)),filtri):
     fig.suptitle(fil)
     fig.savefig(res_folder + filenm_prefix.replace('_STD0','') + '_conc+mdl+pixe_'+fil+'.png', format='png', dpi=300)
              
+    ############### salva file .csv
+    
+    pixe_tot = pd.concat([pixe_small, pixe_big])
+    pixe_tot = pixe_tot.rename(columns={fil.upper():'conc_pixe[ng/cm^2]', fil+'_err_abs':'conc_pixe_err[ng/cm^2]'})
+    tot_frame = pd.merge(t2_39kv, pixe_tot[['element', 'conc_pixe[ng/cm^2]','conc_pixe_err[ng/cm^2]']])
+    
+    tot_frame.to_csv(res_folder + filenm_prefix.replace('_STD0','') + '_'+fil+'.csv', sep=' ', columns=['Z','element', 'line', \
+                                        'conc[ug/cm^2]', 'conc_err_log[ug/cm^2]', 'MDL[ug/cm^2]','2-FWHM_Area', '%Fit_Err', '2-FWHM_Area_tef_blk',\
+                                        'standard_conc','2fwhm_area_std','2fwhm_area_%fit_err_std','mylar_2fwhm_area', \
+                                        'conc_pixe[ng/cm^2]','conc_pixe_err[ng/cm^2]'], index=False)
     ############### plot rapporto PIXE/XRF ###############
     
     pixe_frame = pd.concat([pixe_small, pixe_big])
