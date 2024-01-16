@@ -8,9 +8,11 @@ Created on Mon Jan 23 15:19:55 2023
 
 from read_gupix_output_2 import get_gupix_tables
 import matplotlib.pyplot as plt
+import matplotlib
 import pandas as pd
 from XRF_functions_2 import plot_concentrations, get_std_2fwhm, merge_and_plot
 from numpy import linspace, nan
+import os
 
 markers = ['o','v','*','s','+','x']
 colors = ['#de1d90','#a52a2a','#4682b4','#6b8e23','#f8766d']
@@ -19,34 +21,15 @@ colors = ['black','grey','lightgrey']
 
 ##################################################################################################
 ###################################      PARAMETRI MISURA     ####################################
-##### STRAS Terni He
-filenm_prefix      = 'terni_20231024_He_STD0'
-pixe_filenm        = 'conc_STRAS_Terni.csv'
-pixe_err_filenm    = 'conc_STRAS_Terni_errors.csv' # file contenente errori PIXE
-filter_prefix      = 'stras'
-res_folder         = './results/20231027/He/'
-pixe_nan           = 'BL' # valore nan nel file di risultati pixe
-nfiles             = 14
-time_str_filter    = '1800s' # time string reported in the filename of measured filters 
-voltage_str_legend = '38kV'  # stringa usata per legenda
-voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
-min_std            = 5       # minuti di misura standard
-min_sample         = 30      # minuti di misura campioni
-I                  = 0.1     # corrente in mA
-T                  = min_std*60  # tempo di misura degli standard in secondi
-err_perc_standard  = 0.05        # errore percentuale sugli standard
-mylar_prefix       = 'standard_blk_'
-filter_blk_prefix  = 'stras_blk_'
-filtri             = ['stras22','stras45']
-
-###### TEFLON WHAT He
-# filenm_prefix      = 'tef_what_20231024_He_STD0'
+##### Tef what filters
+# filt = 'Zn50'
+# filenm_prefix      = 'tef_what_20231024_'+filt+'_STD0'
 # pixe_filenm        = 'conc_PIXE_teflon_watman.csv'
 # pixe_err_filenm    = 'conc_PIXE_teflon_watman_errors.csv' # file contenente errori PIXE
 # filter_prefix      = 'T'
-# res_folder         = './results/20231027/He/'
+# res_folder         = './results/20231027/'+filt+'/'
 # pixe_nan           = 'BL' # valore nan nel file di risultati pixe
-# nfiles             = 11
+# nfiles             = 13
 # time_str_filter    = '1800s' # time string reported in the filename of measured filters 
 # voltage_str_legend = '38kV'  # stringa usata per legenda
 # voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
@@ -57,7 +40,89 @@ filtri             = ['stras22','stras45']
 # err_perc_standard  = 0.05        # errore percentuale sugli standard
 # mylar_prefix       = 'standard_blk_'
 # filter_blk_prefix  = 'teflon_blk_'
-# filtri             = ['T3','T5']
+# filtri             = ['T3']
+
+##### Tef what filters
+filt = '75mm2'
+filenm_prefix      = 'tef_what_20231116_'+filt+'_STD0'
+pixe_filenm        = 'conc_PIXE_teflon_watman.csv'
+pixe_err_filenm    = 'conc_PIXE_teflon_watman_errors.csv' # file contenente errori PIXE
+filter_prefix      = 'T'
+res_folder         = './results/20231116/'+filt+'/'
+pixe_nan           = 'BL' # valore nan nel file di risultati pixe
+nfiles             = 18
+time_str_filter    = '1800s' # time string reported in the filename of measured filters 
+voltage_str_legend = '38kV'  # stringa usata per legenda
+voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
+min_std            = 5       # minuti di misura standard
+min_sample         = 30      # minuti di misura campioni
+I                  = 0.1     # corrente in mA
+T                  = min_std*60  # tempo di misura degli standard in secondi
+err_perc_standard  = 0.05        # errore percentuale sugli standard
+mylar_prefix       = 'standard_blk_'
+filter_blk_prefix  = 'teflon_blk'
+filtri             = ['T5']
+
+##### STRAS Terni filters
+# filt = 'Cu24'
+# filenm_prefix      = 'terni_20231024_'+filt+'_STD0'
+# pixe_filenm        = 'conc_STRAS_Terni.csv'
+# pixe_err_filenm    = 'conc_STRAS_Terni_errors.csv' # file contenente errori PIXE
+# filter_prefix      = 'stras'
+# res_folder         = './results/20231027/'+filt+'/'
+# pixe_nan           = 'BL' # valore nan nel file di risultati pixe
+# nfiles             = 13
+# time_str_filter    = '1800s' # time string reported in the filename of measured filters 
+# voltage_str_legend = '38kV'  # stringa usata per legenda
+# voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
+# min_std            = 5       # minuti di misura standard
+# min_sample         = 30      # minuti di misura campioni
+# I                  = 0.1     # corrente in mA
+# T                  = min_std*60  # tempo di misura degli standard in secondi
+# err_perc_standard  = 0.05        # errore percentuale sugli standard
+# mylar_prefix       = 'standard_blk_'
+# filter_blk_prefix  = 'stras_blk_'
+# filtri             = ['stras67']
+
+##### STRAS Terni He
+# filenm_prefix      = 'terni_20231024_He_STD0'
+# pixe_filenm        = 'conc_STRAS_Terni.csv'
+# pixe_err_filenm    = 'conc_STRAS_Terni_errors.csv' # file contenente errori PIXE
+# filter_prefix      = 'stras'
+# res_folder         = './results/20231027/He/'
+# pixe_nan           = 'BL' # valore nan nel file di risultati pixe
+# nfiles             = 14
+# time_str_filter    = '1800s' # time string reported in the filename of measured filters 
+# voltage_str_legend = '38kV'  # stringa usata per legenda
+# voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
+# min_std            = 5       # minuti di misura standard
+# min_sample         = 30      # minuti di misura campioni
+# I                  = 0.1     # corrente in mA
+# T                  = min_std*60  # tempo di misura degli standard in secondi
+# err_perc_standard  = 0.05        # errore percentuale sugli standard
+# mylar_prefix       = 'standard_blk_'
+# filter_blk_prefix  = 'stras_blk_'
+# filtri             = ['stras22','stras44']
+
+###### TEFLON WHAT He
+# filenm_prefix      = 'tef_what_20231024_STD0'
+# pixe_filenm        = 'conc_PIXE_teflon_watman.csv'
+# pixe_err_filenm    = 'conc_PIXE_teflon_watman_errors.csv' # file contenente errori PIXE
+# filter_prefix      = 'T'
+# res_folder         = './results/20231027/noHe/'
+# pixe_nan           = 'BL' # valore nan nel file di risultati pixe
+# nfiles             = 20
+# time_str_filter    = '1800s' # time string reported in the filename of measured filters 
+# voltage_str_legend = '38kV'  # stringa usata per legenda
+# voltage_str_infile = ''      # stringa usata nei nomi file delle misure di standard e teflon
+# min_std            = 5       # minuti di misura standard
+# min_sample         = 30      # minuti di misura campioni
+# I                  = 0.1     # corrente in mA
+# T                  = min_std*60  # tempo di misura degli standard in secondi
+# err_perc_standard  = 0.05        # errore percentuale sugli standard
+# mylar_prefix       = 'standard_blk_'
+# filter_blk_prefix  = 'teflon_blk_'
+# filtri             = ['T5','T3']
 
 # STRAS Terni
 # filenm_prefix      = 'terni_20231025_STD0'
@@ -83,8 +148,8 @@ filtri             = ['stras22','stras45']
 # filenm_prefix = 'tef_what_20231024_STD0'
 # pixe_filenm = 'conc_PIXE_teflon_watman.csv' # file contenente concentrazioni PIXE
 # pixe_err_filenm = 'conc_PIXE_teflon_watman_errors.csv' # file contenente errori PIXE
+# res_folder         = './results/20231027/noHe/'
 # filter_prefix='T' # prefisso nome filtri
-
 # nfiles = 20
 # time_str_filter = '1800s' # time string reported in the filename of measured filters 
 # voltage_str_legend = '38kV' # stringa usata per legenda
@@ -96,7 +161,7 @@ filtri             = ['stras22','stras45']
 # err_perc_standard=0.05 # errore percentuale sugli standard
 # mylar_prefix = 'standard_blk_'
 # filter_blk_prefix = 'teflon_blk_'
-# filtri = ['T3','T5']
+# filtri = ['T5','T3']
 
 # misura luglio
 # filenm_prefix = 'teflon_what_STD0'
@@ -133,6 +198,24 @@ for i in range(len(files_list)):  # rinomina standard con prefisso std_
     if not ((files_list[i][1].startswith(filter_prefix)) & (files_list[i][1][1] != 'i' ) & (files_list[i][1][1] != 'e' )):
         files_list[i][1] = 'std_' + files_list[i][1]
     
+    
+# duplica file con NaCl
+for ele in ['KCl', 'NaCl']: # se almeno uno dei due standard fra KCl e NaCl è stato misurato crea anche standard per Cl                
+
+    Cl_exist = False
+    for fi in files_list:
+        if '_Cl_' in fi[1]:
+            Cl_exist = True
+            
+    for fi, i in zip(files_list.copy(), range(len(files_list))):
+            if (ele in fi[1]) & (not Cl_exist):
+                files_list.append(fi.copy())
+                files_list[-1][0] = files_list[-1][0].replace('STD'+str(i+1).zfill(3),'STD'+str(len(files_list)).zfill(3))
+                files_list[-1][1] = files_list[-1][1].replace(ele,'Cl')
+                os.system('cp ./results/' + fi[0] + ' ./results/' + files_list[-1][0]) # create the new file
+                os.system("sed -i 's/"+ele+"/Cl/g'"   + " ./results/" + files_list[-1][0]) # rename NaCl with Cl inside the file
+
+
 #######################################
 ########### # plot 2-FWHM  ############
 #######################################
@@ -155,7 +238,7 @@ for filter_num in filtri:
                                 text=False, LOD=True, LOD_color=True, custom_lab=file[1])
         # fig.tight_layout()
         
-    fig.savefig(res_folder+'2fwhm+lod_'  + filenm_prefix.replace('_STD0','') + '_' + filter_num+'_1-39kv.png', format='png', dpi=300)
+    fig.savefig(res_folder+'2fwhm+lod_'  + filenm_prefix.replace('_STD0','') + '_' + filter_num+'.png', format='png', dpi=300)
 
 
 ##############   CALIBRAZIONE
@@ -165,9 +248,9 @@ standard_39kv   = [f for f in files_list if ('std_' in f[1])
 mylar_39kv      = [f for f in files_list if (mylar_prefix in f[1]) ]
 teflon_blk_39kv = [f for f in files_list if (filter_blk_prefix in f[1]) ]
 
-std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg', 'Cu', 'Fe', 'Pb', 'Zn', 'Mn', 'Ti',  'S', 'Cr', 'Ni', 'Mo'   ],
-                                    'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 16.7, 24.0, 43.4, 15.4, 24.2, 26.2, 11.3,   18.9  , 13.6   , 32.0   ],
-                                    'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K',  'K',  'LA',  'K',  'K',  'K',  'K', 'K', 'K' , 'K' ]}) # valori di concentrazione elementale sui filtri misurati
+std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg', 'Cu', 'Fe', 'Pb', 'Zn', 'Mn', 'Ti',  'S', 'Cr' , 'Ni','Mo' , 'Cl'  ],
+                                    'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 16.7, 24.0, 43.4, 15.4, 24.2, 26.2, 11.3, 18.9, 13.6, 32.0, 28.14   ],
+                                    'line':[ 'K',  'K',   'K',  'K',  'K',  'K',  'K',  'K',  'LA',  'K',  'K',  'K',  'K', 'K', 'K' , 'K', 'K' ]}) # valori di concentrazione elementale sui filtri misurati
 
 # std_conc_39kv =  pd.DataFrame(data={'ele':[ 'Al', 'Na',  'K', 'Ca', 'Si', 'Mg',   'S' ],
 #                                    'conc':[ 40.8, 18.3, 26.0, 28.7, 38.4, 21.6, 11.3   ],
@@ -207,6 +290,9 @@ plt.savefig(res_folder+ filenm_prefix.replace('_STD0','') + '_sensitivity_Rh_ano
                    
 print("\n\nmylar blank contribution to sensitivity [%]:\n",round(1/(peak_area_std_39kv.set_index('element')['peak_area']/ peak_area_std_39kv.set_index('element')['mylar_peak_area'])*100,2))
 
+round(1/(peak_area_std_39kv.set_index('element')['peak_area']/ peak_area_std_39kv.set_index('element')['mylar_peak_area'])*100,2).to_csv('blank_contr/'+ filenm_prefix.replace('_STD0','') + '_mylar_contr.csv', sep = ' ')
+
+
 #################################################
 ############### confronto XRF-PIXE ##############
 ################################################# 
@@ -215,7 +301,7 @@ mdl_frame_39kv = pd.DataFrame()
 
 for i, fil in zip(range(len(filtri)),filtri):
     
-    fig, ax= plt.subplots(1,1, figsize=(8,6))
+    fig, ax= plt.subplots(1,1, figsize=(8,5))
 
     ############### plot XRF ###################
 
@@ -245,8 +331,8 @@ for i, fil in zip(range(len(filtri)),filtri):
                                                               y_units ='[$\mu$g/cm$^2$]', 
                                                               color = 'gray')
     
-    t2_39kv=    t2_39kv.round({ '2-FWHM_Area_tef_blk':0,'2-FWHM_Area':0, 'conc[ug/cm^2]':2,'conc_err_log[ug/cm^2]':2,\
-                               'MDL[ug/cm^2]':2, 'standard_conc':1,'2fwhm_area':0,'mylar_2fwhm_area':0})
+    t2_39kv=    t2_39kv.round({ '2-FWHM_Area_tef_blk':0,'2-FWHM_Area':0, 'conc[ug/cm^2]':5,'conc_err_log[ug/cm^2]':5,\
+                               'MDL[ug/cm^2]':5, 'standard_conc':1,'2fwhm_area':0,'mylar_2fwhm_area':0})
     
     ##### store MDL values for each filter
 
@@ -332,6 +418,9 @@ for i, fil in zip(range(len(filtri)),filtri):
     plt.savefig(res_folder + filenm_prefix.replace('_STD0','')+'_'+fil+'_pixe_xrf_ratio.png', format='png', dpi=300)
     plt.show()
     print('\n\n',fil, " teflon blank contribution to 2fwhm area [%]:\n",round((t2_39kv.set_index('element')['2-FWHM_Area_tef_blk']/ t2_39kv.set_index('element')['2-FWHM_Area'])*100,2))
+
+
+    round((t2_39kv.set_index('element')['2-FWHM_Area_tef_blk']/ t2_39kv.set_index('element')['2-FWHM_Area'])*100,2).to_csv('blank_contr/'+ filenm_prefix.replace('_STD0','') + '_' + fil + '_teflon_contr.csv', sep = ' ')
 
 mdl_frame_39kv.to_csv(filenm_prefix.replace('_STD0','') + '_mdl_teflon_what_39kv', sep=' ', index=False)
 
